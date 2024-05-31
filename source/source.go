@@ -14,6 +14,8 @@ const (
 	EU Region = "eu"
 )
 
+var SOURCES map[string]Source
+
 // RegistrySources is a map of regions to registry regions
 type RegistrySources map[Region]RegistryRegion
 
@@ -40,7 +42,8 @@ func GetRemoteSourcesMap() (map[string]Source, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ConvertSources(sources), nil
+	SOURCES = ConvertSources(sources)
+	return SOURCES, nil
 }
 
 type Source struct {
@@ -70,22 +73,24 @@ func ConvertSources(sources *RegistrySources) map[string]Source {
 Custom print functions with colors
 */
 
-func PrintSources(sources *RegistrySources) {
-	m := ConvertSources(sources)
+func PrintSources(m map[string]Source) {
 	printSourceTitle("====================Current Sources=====================")
 	for _, v := range m {
 		printSource(v.Name, v.Url, v.Region)
 	}
 }
+
 func printRegionSources(sources RegistryRegion, region string) {
 	for k, v := range sources {
 		//TODO: only concern first url for now
 		printSource(k, v[0], region)
 	}
 }
+
 func printSourceTitle(title string) {
 	console.Println(console.Color.Purple, title)
 }
+
 func printSource(source string, url string, region string) {
 	console.Print(source)
 	console.Print(" ")
