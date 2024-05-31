@@ -29,6 +29,10 @@ func Println(color string, messages ...string) {
 	message := strings.Join(messages, " ")
 	fmt.Println(color + message + Color.Reset)
 }
+func Print(color string, messages ...string) {
+	message := strings.Join(messages, " ")
+	fmt.Print(color + message + Color.Reset)
+}
 
 func Printf(color string, format string, a ...interface{}) {
 	fmt.Printf(color+format+Color.Reset, a...)
