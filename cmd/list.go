@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"registryhub/console"
 	"registryhub/source"
 
@@ -10,25 +9,19 @@ import (
 
 var listCommand = &cobra.Command{
 	Use:   "list",
-	Short: "List all sources",
+	Short: "List current sources using",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		// sources := source.ReadBackup()
-		// for v, s := range sources {
-		// 	console.Warning(v, s)
-		// }
-		sources, err := source.GetRemoteSources()
+
+		// m := source.ReadBackup()
+		m, err := source.GetLocalSourcesMap()
 		if err != nil {
-			console.Error("Failed to get remote sources:", err.Error())
+			console.Error("Failed to get local sources:", err.Error())
 			return
 		}
-		fmt.Println(sources)
-		for region, registryRegion := range *sources {
-			fmt.Println(region)
-			for packageManager, urls := range registryRegion {
-				console.Success(packageManager, urls[0])
-			}
-		}
+
+		source.PrintSources(m)
+
 	},
 }
 
