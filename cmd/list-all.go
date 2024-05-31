@@ -13,7 +13,7 @@ var listAllCommand = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 
-		sources, err := source.GetRemoteRegistrySources()
+		sources, err := source.GetRemoteSourcesMap()
 		if err != nil {
 			console.Error("Failed to get remote sources:", err.Error())
 			return
