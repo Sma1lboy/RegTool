@@ -2,6 +2,7 @@ package source
 
 import (
 	"encoding/json"
+	"os"
 	"os/exec"
 	"registryhub/console"
 )
@@ -98,4 +99,28 @@ func printSource(source string, url string, region string) {
 	console.Print(" ")
 	console.Print(console.Color.Purple, region)
 	console.Println("")
+}
+
+func TestGetRemoteSourcesMap() (map[string]Source, error) {
+	f, err := os.Open("sources.json")
+	if err != nil {
+		console.Error("Failed to open sources.json:", err.Error())
+		return map[string]Source{}, err
+	}
+	defer f.Close()
+	var sources RegistrySources
+	buffer := make([]byte, 1024)
+	_, err = f.Read(buffer)
+	if err != nil {
+		println(err)
+	}
+
+	err = json.Unmarshal(buffer, &sources)
+
+	if err != nil {
+		return map[string]Source{}, err
+	}
+	m := ConvertSources(&sources)
+
+	return m, nil
 }

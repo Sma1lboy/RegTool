@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"os"
 	"registryhub/console"
+	"registryhub/env"
 	"registryhub/source"
 
 	"github.com/spf13/cobra"
@@ -13,12 +15,17 @@ var listAllCommand = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 
-		sources, err := source.GetRemoteSourcesMap()
-		if err != nil {
-			console.Error("Failed to get remote sources:", err.Error())
-			return
+		if os.Getenv(env.GO_MODE) == env.DEBUG {
+			rs, _ := source.TestGetRemoteSourcesMap()
+			source.PrintSources(rs)
+		} else {
+			sources, err := source.GetRemoteSourcesMap()
+			if err != nil {
+				console.Error("Failed to get remote sources:", err.Error())
+				return
+			}
+			source.PrintSources(sources)
 		}
-		source.PrintSources(sources)
 	},
 }
 
