@@ -15,6 +15,19 @@ const (
 	EU Region = "eu"
 )
 
+func StringToRegion(region string) Region {
+	switch region {
+	case "cn":
+		return CN
+	case "us":
+		return US
+	case "eu":
+		return EU
+	default:
+		return ""
+	}
+}
+
 var SOURCES map[string]Source
 
 // RegistrySources is a map of regions to registry regions
@@ -123,4 +136,32 @@ func TestGetRemoteSourcesMap() (map[string]Source, error) {
 	m := ConvertSources(&sources)
 
 	return m, nil
+}
+
+func printSuccussMessage(app string, registry string, region string) {
+	console.Printf(console.Color.Reset, "Setting ")
+	console.Printf(console.Color.Red, "%s", app)
+	console.Print(console.Color.Reset, " to")
+	console.Printf(console.Color.Green, " %s ", region)
+	console.Print(console.Color.Reset, "registry")
+	console.Printf(console.Color.Green, " %s\n", registry)
+}
+func printChangeRegistryHeader(region string) {
+	console.Println(console.Color.Purple, "=========Changing all sources to the", region, "registry=========")
+	console.Println("", "")
+}
+func printChangeRegistryFooter() {
+	console.Println("", "")
+	console.Println(console.Color.Purple, "=================================================================")
+}
+func ChangeAllRegistry(region string) bool {
+	printChangeRegistryHeader(region)
+
+	//init source manager
+	npmManager := NpmRegistryManager{}
+	registry, _ := npmManager.SetRegistry(region)
+	printSuccussMessage("npm", registry, region)
+
+	printChangeRegistryFooter()
+	return true
 }
