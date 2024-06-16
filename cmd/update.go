@@ -10,21 +10,21 @@ import (
 )
 
 var region string
-var app string
+var target string
 
 var updateCmd = &cobra.Command{
 	Use:   "update [region]",
 	Short: "Update sources to the specified region registry",
 	Long: `Update sources managed by RegistryHub to use the registry of the specified region.
-   If --app is provided, update only the specified app. Valid regions are 'cn' for China and 'us' for the United States.`,
+   If --target is provided, update only the specified app. Valid regions are 'cn' for China and 'us' for the United States.`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		region := args[0]
 		var err error
-		if app != "" {
-			err2 := source.UpdateRegistry(app, region)
+		if target != "" {
+			err2 := source.UpdateRegistry(target, region)
 			if err2 != nil {
-				err = fmt.Errorf("invalid app name to update %s to the %s registry", app, region)
+				err = fmt.Errorf("invalid app name to update %s to the %s registry", target, region)
 			}
 
 		} else {
@@ -39,8 +39,8 @@ var updateCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		if app != "" {
-			fmt.Printf("Successfully updated %s to the %s registry.\n", app, region)
+		if target != "" {
+			fmt.Printf("Successfully updated %s to the %s registry.\n", target, region)
 		} else {
 			fmt.Printf("Successfully updated all sources\n")
 		}
@@ -49,5 +49,5 @@ var updateCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(updateCmd)
-	updateCmd.Flags().StringVar(&app, "app", "", "Specific app to update registry for (optional)")
+	updateCmd.Flags().StringVarP(&target, "target", "t", "", "Specific target to update registry for (optional)")
 }
