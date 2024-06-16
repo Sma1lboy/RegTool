@@ -103,8 +103,9 @@ func saveToBackup(source map[string]string) {
 
 func Run() map[string]string {
 	backup()
-	sources := map[string]string{
-		"npm": getNpmRegistry(),
+	sources := map[string]string{}
+	for k, v := range registryManagers {
+		sources[k], _ = v.GetCurrRegistry()
 	}
 	saveToBackup(sources)
 	return sources
