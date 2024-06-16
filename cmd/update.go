@@ -22,7 +22,11 @@ var updateCmd = &cobra.Command{
 		region := args[0]
 		var err error
 		if app != "" {
-			// err = updateSoftwareRegistry(app, region)
+			err2 := source.UpdateRegistry(app, region)
+			if err2 != nil {
+				err = fmt.Errorf("invalid app name to update %s to the %s registry", app, region)
+			}
+
 		} else {
 			if !source.ChangeAllRegistry(region) {
 				err = fmt.Errorf("failed to update all sources to the %s registry", region)
@@ -38,7 +42,7 @@ var updateCmd = &cobra.Command{
 		if app != "" {
 			fmt.Printf("Successfully updated %s to the %s registry.\n", app, region)
 		} else {
-			fmt.Printf("Successfully updated all sources to the %s registry.\n", region)
+			fmt.Printf("Successfully updated all sources\n")
 		}
 	},
 }

@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"registryhub/common"
 	"registryhub/console"
+	"strings"
 )
 
 type Region string
@@ -142,12 +144,13 @@ func printSuccussMessage(app string, registry string, region string) {
 	console.Printf(console.Color.Reset, "Setting ")
 	console.Printf(console.Color.Red, "%s", app)
 	console.Print(console.Color.Reset, " to")
-	console.Printf(console.Color.Green, " %s ", region)
+	console.Printf(console.Color.Green, " %s ", strings.ToUpper(region))
 	console.Print(console.Color.Reset, "registry")
-	console.Printf(console.Color.Green, " %s\n", registry)
+	console.Printf(console.Color.Green, " %s", registry)
+	console.Print(console.Color.Reset, " ✅\n")
 }
 func printChangeRegistryHeader(region string) {
-	console.Println(console.Color.Purple, "=========Changing all sources to the", region, "registry=========")
+	console.Println(console.Color.Purple, "=========Changing all sources to the", strings.ToUpper(region), "registry=========")
 	console.Println("", "")
 }
 func printChangeRegistryFooter() {
@@ -164,4 +167,18 @@ func ChangeAllRegistry(region string) bool {
 
 	printChangeRegistryFooter()
 	return true
+}
+
+var registryManagers map[string]common.RegistryManager = map[string]common.RegistryManager{
+	"npm": NpmRegistryManager{},
+}
+
+func UpdateRegistry(region string, app string) error {
+	if registryManager, ok := registryManagers[region]; ok {
+		registry, _ := registryManager.SetRegistry(region)
+		printSuccussMessage(app, registry, region)
+	} else {
+		return &exec.Error{Name: "Key does not exist", Err: nil}
+	}
+	return nil
 }
