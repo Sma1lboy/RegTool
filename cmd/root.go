@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
    download sources with ease and speed. Built with love by spf13 and friends
    using Go, RegistryHub simplifies the process of handling and organizing software repositories.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("run hugo...")
+		cmd.Help()
 	},
 }
 
