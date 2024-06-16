@@ -26,5 +26,11 @@ func (n NpmRegistryManager) SetRegistry(region string) (string, error) {
 	}
 	registry := (*rs)[StringToRegion(region)]["npm"][0]
 	//TODO real set up registry
+	err = exec.Command("npm", "config", "set", "registry", registry).Run()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return "", err
+	}
+
 	return registry, nil
 }
