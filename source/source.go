@@ -6,49 +6,23 @@ import (
 	"os/exec"
 	"registryhub/console"
 	"registryhub/source/npm"
+	"registryhub/source/structs"
 	"strings"
 )
 
-type Region string
-
-const (
-	CN Region = "cn"
-	US Region = "us"
-	EU Region = "eu"
-)
-
-func StringToRegion(region string) Region {
-	switch region {
-	case "cn":
-		return CN
-	case "us":
-		return US
-	case "eu":
-		return EU
-	default:
-		return ""
-	}
-}
-
 var SOURCES map[string]Source
 
-// RegistrySources is a map of regions to registry regions
-type RegistrySources map[Region]RegistryRegion
-
-// RegistryRegion is a map of package managers to urls
-type RegistryRegion map[string][]string
-
 // Run fetches the remote sources and returns them
-func GetRemoteRegistrySources() (*RegistrySources, error) {
+func GetRemoteRegistrySources() (*structs.RegistrySources, error) {
 
 	cmd := exec.Command("curl", "-L", "https://gitee.com/Sma1lboyyy/registry-hub/raw/main/sources.json")
 	output, err := cmd.Output()
 	if err != nil {
 		console.Error("Failed to fetch remote sources:", err.Error())
-		return &RegistrySources{}, err
+		return &structs.RegistrySources{}, err
 
 	}
-	var sources RegistrySources
+	var sources structs.RegistrySources
 	err = json.Unmarshal(output, &sources)
 
 	return &sources, err
@@ -71,7 +45,7 @@ type Source struct {
 /*
 Convert sources to a map of package managers to sources
 */
-func ConvertSources(sources *RegistrySources) map[string]Source {
+func ConvertSources(sources *structs.RegistrySources) map[string]Source {
 	result := make(map[string]Source)
 	for region, registryRegion := range *sources {
 		for packageManager, urls := range registryRegion {
@@ -96,7 +70,7 @@ func PrintSources(m map[string]Source) {
 	}
 }
 
-func printRegionSources(sources RegistryRegion, region string) {
+func printRegionSources(sources structs.RegistryRegionSources, region string) {
 	for k, v := range sources {
 		//TODO: only concern first url for now
 		printSource(k, v[0], region)
@@ -123,7 +97,7 @@ func TestGetRemoteSourcesMap() (map[string]Source, error) {
 		return map[string]Source{}, err
 	}
 	defer f.Close()
-	var sources RegistrySources
+	var sources structs.RegistrySources
 	buffer := make([]byte, 1024)
 	_, err = f.Read(buffer)
 	if err != nil {
@@ -160,9 +134,15 @@ func printChangeRegistryFooter() {
 func ChangeAllRegistry(region string) bool {
 	printChangeRegistryHeader(region)
 
+	rs, err := GetRemoteRegistrySources()
+	if err != nil {
+		console.Error("Failed to fetch remote sources:", err.Error())
+		return false
+	}
+
 	//init source manager
 	npmManager := npm.NpmRegistryManager{}
-	registry, _ := npmManager.SetRegistry(region)
+	registry, _ := npmManager.SetRegistry(structs.StringToRegion(region), rs)
 	printSuccussMessage("npm", registry, region)
 
 	printChangeRegistryFooter()
@@ -174,8 +154,14 @@ var registryManagers map[string]RegistryManager = map[string]RegistryManager{
 }
 
 func UpdateRegistry(region string, app string) error {
+	rs, err := GetRemoteRegistrySources()
+	if err != nil {
+		console.Error("Failed to fetch remote sources:", err.Error())
+		return &exec.Error{Name: "Failed to fetch remote sources", Err: err}
+	}
+
 	if registryManager, ok := registryManagers[region]; ok {
-		registry, _ := registryManager.SetRegistry(region)
+		registry, _ := registryManager.SetRegistry(structs.StringToRegion(region), rs)
 		printSuccussMessage(app, registry, region)
 	} else {
 		return &exec.Error{Name: "Key does not exist", Err: nil}
