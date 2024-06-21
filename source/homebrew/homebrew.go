@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 	"registryhub/shell"
+	"registryhub/source"
 	"registryhub/source/structs"
 	"strings"
 )
@@ -30,13 +31,11 @@ func (h HomebrewRegistryManager) GetCurrRegistry() (string, error) {
 
 // SetRegistry sets the Homebrew registry to the specified URLs from the given region
 func (h HomebrewRegistryManager) SetRegistry(region structs.Region, sources *structs.RegistrySources) (string, error) {
-	// 检查 sources 中是否存在指定的 region
 	regionSources, ok := (*sources)[region]
 	if !ok {
 		return "", fmt.Errorf("unsupported region: %s", region)
 	}
 
-	// 获取需要设置的环境变量和对应的 URL
 	envVars := []string{
 		"HOMEBREW_API_DOMAIN",
 		"HOMEBREW_BOTTLE_DOMAIN",
@@ -69,4 +68,8 @@ func (h HomebrewRegistryManager) SetRegistry(region structs.Region, sources *str
 	}
 
 	return "Homebrew registry set successfully", nil
+}
+
+func init() {
+	source.RegisterManager([]string{"homebrew", "brew"}, HomebrewRegistryManager{})
 }

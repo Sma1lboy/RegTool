@@ -4,6 +4,7 @@ package npm
 import (
 	"fmt"
 	"os/exec"
+	"registryhub/source"
 	"registryhub/source/structs"
 	"strings"
 )
@@ -40,4 +41,8 @@ func (n NpmRegistryManager) SetRegistry(region structs.Region, sources *structs.
 		return "", err
 	}
 	return res, nil
+}
+
+func init() {
+	source.RegisterManager([]string{"npm"}, NpmRegistryManager{})
 }
