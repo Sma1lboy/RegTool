@@ -82,3 +82,15 @@ func GetEnvVarFromFile(filename, key string) (string, error) {
 
 	return "", fmt.Errorf("environment variable %s not found", key)
 }
+
+// GetEnv attempts to get the environment variable from the OS environment first,
+// and if not found, it reads from the specified shell configuration file.
+func GetEnv(key, filename string) (string, error) {
+	// First, try to get the environment variable from the OS environment
+	if value, exists := os.LookupEnv(key); exists {
+		return value, nil
+	}
+
+	// If not found in OS environment, proceed to read from the shell configuration file
+	return GetEnvVarFromFile(filename, key)
+}
