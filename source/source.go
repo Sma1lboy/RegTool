@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
-	"registryhub/common"
 	"registryhub/console"
+	"registryhub/source/npm"
 	"strings"
 )
 
@@ -161,7 +161,7 @@ func ChangeAllRegistry(region string) bool {
 	printChangeRegistryHeader(region)
 
 	//init source manager
-	npmManager := NpmRegistryManager{}
+	npmManager := npm.NpmRegistryManager{}
 	registry, _ := npmManager.SetRegistry(region)
 	printSuccussMessage("npm", registry, region)
 
@@ -169,8 +169,8 @@ func ChangeAllRegistry(region string) bool {
 	return true
 }
 
-var registryManagers map[string]common.RegistryManager = map[string]common.RegistryManager{
-	"npm": NpmRegistryManager{},
+var registryManagers map[string]RegistryManager = map[string]RegistryManager{
+	"npm": npm.NpmRegistryManager{},
 }
 
 func UpdateRegistry(region string, app string) error {
