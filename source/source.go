@@ -3,10 +3,19 @@ package source
 import (
 	"encoding/json"
 	"os/exec"
+	"registryhub/alias"
 	"registryhub/console"
 	"registryhub/source/structs"
 	"strings"
 )
+
+var aliasManager = alias.NewAliasManager()
+
+func init() {
+	aliasManager.RegisterAlias("homebrew", []string{"brew"})
+	// Register other aliases here
+	source.RegisterManager([]string{"homebrew", "brew"}, HomebrewRegistryManager{})
+}
 
 // GetRemoteRegistrySources fetches the remote sources and returns them
 func GetRemoteRegistrySources() (*structs.RegistrySources, error) {
@@ -122,7 +131,7 @@ func ChangeAllRegistry(region string) bool {
 
 var registryManagers = map[string]RegistryManager{}
 
-// RegistryManager is an interface for managing package manager registries
+// RegistryManager is an interface for registers package manager registries
 func RegisterManager(name []string, manager RegistryManager) {
 	for _, n := range name {
 		registryManagers[n] = manager
@@ -136,11 +145,16 @@ func UpdateRegistry(region string, app string) error {
 		return &exec.Error{Name: "Failed to fetch remote sources", Err: err}
 	}
 
-	if registryManager, ok := registryManagers[app]; ok {
-		registry, _ := registryManager.SetRegistry(structs.StringToRegion(region), rs)
-		printSuccessMessage(app, registry, region)
-	} else {
-		return &exec.Error{Name: "Key does not exist", Err: nil}
+	primaryApp := aliasManager.GetPrimary(app)
+	aliases := aliasManager.GetAllAliases(primaryApp)
+
+	for _, alias := range aliases {
+		if registryManager, ok := registryManagers[alias]; ok {
+			registry, _ := registryManager.SetRegistry(structs.StringToRegion(region), rs)
+			printSuccessMessage(alias, registry, region)
+		} else {
+			return &exec.Error{Name: "Key does not exist", Err: nil}
+		}
 	}
 	return nil
 }
