@@ -5,6 +5,7 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/fatih/color"
 )
 
 type mainMenuModel struct {
@@ -52,17 +53,21 @@ func (m mainMenuModel) View() string {
 	s := "RegistryHub\n\n"
 	for i, choice := range m.choices {
 		cursor := " " // no cursor
+		line := choice
 		if m.cursor == i {
 			cursor = ">" // cursor!
+			// Use color package to bold and color the selected line
+			bold := color.New(color.FgBlue).Add(color.Bold)
+			line = bold.Sprintf(choice)
 		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
+		s += fmt.Sprintf("%s %s\n", cursor, line)
 	}
 	s += "\nPress 'q' to quit.\n"
 	return s
 }
 
 func Run() {
-	RegisterCommand("mainMenu", "Main Menu", newMainMenuModel())
+	RegisterCommand(mainMenuName, "Main Menu", newMainMenuModel())
 
 	p := tea.NewProgram(newMainMenuModel())
 	if _, err := p.Run(); err != nil {
