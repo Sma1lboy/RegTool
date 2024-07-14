@@ -3,19 +3,13 @@ package source
 import (
 	"encoding/json"
 	"os/exec"
-	"registryhub/alias"
+	"registryhub/common/alias"
 	"registryhub/console"
 	"registryhub/source/structs"
 	"strings"
 )
 
 var aliasManager = alias.NewAliasManager()
-
-func init() {
-	aliasManager.RegisterAlias("homebrew", []string{"brew"})
-	// Register other aliases here
-	source.RegisterManager([]string{"homebrew", "brew"}, HomebrewRegistryManager{})
-}
 
 // GetRemoteRegistrySources fetches the remote sources and returns them
 func GetRemoteRegistrySources() (*structs.RegistrySources, error) {
@@ -131,10 +125,10 @@ func ChangeAllRegistry(region string) bool {
 
 var registryManagers = map[string]RegistryManager{}
 
-// RegistryManager is an interface for registers package manager registries
-func RegisterManager(name []string, manager RegistryManager) {
-	for _, n := range name {
-		registryManagers[n] = manager
+// RegisterManager registers a manager for the given names
+func RegisterManager(names []string, manager RegistryManager) {
+	for _, name := range names {
+		registryManagers[name] = manager
 	}
 }
 

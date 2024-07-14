@@ -16,8 +16,7 @@ var listAllCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if os.Getenv(env.GO_MODE) == env.DEBUG {
-			rs, _ := source.TestGetRemoteSourcesMap()
-			source.PrintSources(rs)
+
 		} else {
 			sources, err := source.GetRemoteSourcesMap()
 			if err != nil {
