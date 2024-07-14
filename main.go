@@ -7,5 +7,5 @@ import (
 
 func main() {
 	env.Init()
-	cmd.Execute()
+	cmd.Run()
 }
