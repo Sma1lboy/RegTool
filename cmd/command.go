@@ -1,6 +1,10 @@
 package cmd
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"sort"
+
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 type Command interface {
 	Init() tea.Cmd
@@ -14,8 +18,9 @@ type CommandInfo struct {
 	Command     Command
 }
 
-var commandRegistry = make(map[string]CommandInfo)
-var mainMenuName = "mainMenu"
+var commandRegistry = map[string]CommandInfo{}
+
+const mainMenuName = "mainMenu"
 
 func RegisterCommand(name, description string, cmd Command) {
 	commandRegistry[name] = CommandInfo{
@@ -34,21 +39,31 @@ func GetCommand(name string) (tea.Model, tea.Cmd) {
 }
 
 func ListCommandDescriptions() []string {
-	descriptions := make([]string, 0, len(commandRegistry))
-	for _, info := range commandRegistry {
-		if info.Name != mainMenuName {
-			descriptions = append(descriptions, info.Description)
+	keys := make([]string, 0, len(commandRegistry))
+	for key := range commandRegistry {
+		if key != mainMenuName {
+			keys = append(keys, key)
 		}
+	}
+	sort.Strings(keys)
+	descriptions := make([]string, len(keys))
+	for i, key := range keys {
+		descriptions[i] = commandRegistry[key].Description
 	}
 	return descriptions
 }
 
 func ListCommandNames() []string {
-	names := make([]string, 0, len(commandRegistry))
-	for name := range commandRegistry {
-		if name != mainMenuName {
-			names = append(names, name)
+	keys := make([]string, 0, len(commandRegistry))
+	for key := range commandRegistry {
+		if key != mainMenuName {
+			keys = append(keys, key)
 		}
+	}
+	sort.Strings(keys)
+	names := make([]string, len(keys))
+	for i, key := range keys {
+		names[i] = commandRegistry[key].Name
 	}
 	return names
 }
