@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-var aliasManager = alias.NewAliasManager()
-
 // GetRemoteRegistrySources fetches the remote sources and returns them
 func GetRemoteRegistrySources() (*structs.RegistrySources, error) {
 	cmd := exec.Command("curl", "-L", "https://gitee.com/Sma1lboyyy/registry-hub/raw/main/sources.json")
@@ -139,13 +137,18 @@ func UpdateRegistry(region string, app string) error {
 		return &exec.Error{Name: "Failed to fetch remote sources", Err: err}
 	}
 
-	primaryApp := aliasManager.GetPrimary(app)
-	aliases := aliasManager.GetAllAliases(primaryApp)
+	primaryApp := alias.GetPrimary(app)
+	aliases := alias.GetAllAliases(primaryApp)
+
+	if registryManager, ok := registryManagers[primaryApp]; ok {
+		_, _ = registryManager.SetRegistry(structs.StringToRegion(region), rs)
+	} else {
+		return &exec.Error{Name: "Key does not exist", Err: nil}
+	}
 
 	for _, alias := range aliases {
 		if registryManager, ok := registryManagers[alias]; ok {
-			registry, _ := registryManager.SetRegistry(structs.StringToRegion(region), rs)
-			printSuccessMessage(alias, registry, region)
+			_, _ = registryManager.SetRegistry(structs.StringToRegion(region), rs)
 		} else {
 			return &exec.Error{Name: "Key does not exist", Err: nil}
 		}

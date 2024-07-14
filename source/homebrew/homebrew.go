@@ -70,11 +70,9 @@ func (h HomebrewRegistryManager) SetRegistry(region structs.Region, sources *str
 
 	return "Homebrew registry set successfully", nil
 }
-
-var aliasManager = alias.NewAliasManager()
-
 func init() {
-	aliasManager.RegisterAlias("homebrew", []string{"brew"})
+	alias.RegisterAlias("homebrew", []string{"brew"})
+
 	// Register other aliases here
 	source.RegisterManager([]string{"homebrew", "brew"}, HomebrewRegistryManager{})
 }

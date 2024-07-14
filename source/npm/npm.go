@@ -4,6 +4,7 @@ package npm
 import (
 	"fmt"
 	"os/exec"
+	"registryhub/common/alias"
 	"registryhub/source"
 	"registryhub/source/structs"
 	"strings"
@@ -22,6 +23,10 @@ func (n NpmRegistryManager) GetCurrRegistry() (string, error) {
 }
 
 func (n NpmRegistryManager) SetRegistry(region structs.Region, sources *structs.RegistrySources) (string, error) {
+	if sources == nil {
+		return "", fmt.Errorf("sources is nil")
+	}
+	fmt.Println("test")
 	regionSources, ok := (*sources)[region]
 	if !ok {
 		return "", fmt.Errorf("unsupported region: %s", region)
@@ -34,6 +39,7 @@ func (n NpmRegistryManager) SetRegistry(region structs.Region, sources *structs.
 
 	res := npmSources[0]
 
+	fmt.Println(res)
 	c := exec.Command("npm", "config", "set", "registry", res)
 	_, err := c.Output()
 	if err != nil {
@@ -44,5 +50,6 @@ func (n NpmRegistryManager) SetRegistry(region structs.Region, sources *structs.
 }
 
 func init() {
+	alias.RegisterAlias("npm", []string{})
 	source.RegisterManager([]string{"npm"}, NpmRegistryManager{})
 }
