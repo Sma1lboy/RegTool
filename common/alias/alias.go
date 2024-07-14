@@ -2,39 +2,42 @@ package alias
 
 // AliasManager manages primary names and their aliases
 type AliasManager struct {
-	aliases map[string]string
+	primaryToAliases map[string][]string
+	aliasToPrimary   map[string]string
 }
 
-// NewAliasManager creates a new AliasManager
-func NewAliasManager() *AliasManager {
+// newAliasManager creates a new AliasManager
+func newAliasManager() *AliasManager {
 	return &AliasManager{
-		aliases: make(map[string]string),
+		primaryToAliases: make(map[string][]string),
+		aliasToPrimary:   make(map[string]string),
 	}
 }
 
+// manager is the global instance of AliasManager
+var manager = newAliasManager()
+
 // RegisterAlias registers a primary name with its aliases
-func (am *AliasManager) RegisterAlias(primary string, aliases []string) {
-	am.aliases[primary] = primary
+func RegisterAlias(primary string, aliases []string) {
+	manager.primaryToAliases[primary] = aliases
+	manager.aliasToPrimary[primary] = primary
 	for _, alias := range aliases {
-		am.aliases[alias] = primary
+		manager.aliasToPrimary[alias] = primary
 	}
 }
 
 // GetPrimary returns the primary name for a given alias
-func (am *AliasManager) GetPrimary(alias string) string {
-	if primary, ok := am.aliases[alias]; ok {
+func GetPrimary(alias string) string {
+	if primary, ok := manager.aliasToPrimary[alias]; ok {
 		return primary
 	}
 	return alias
 }
 
 // GetAllAliases returns all aliases for a given primary name
-func (am *AliasManager) GetAllAliases(primary string) []string {
-	var result []string
-	for alias, p := range am.aliases {
-		if p == primary {
-			result = append(result, alias)
-		}
+func GetAllAliases(primary string) []string {
+	if aliases, ok := manager.primaryToAliases[primary]; ok {
+		return aliases
 	}
-	return result
+	return []string{}
 }
