@@ -20,6 +20,7 @@
 
 **Features:**
 
+- **Using TUI instead CLI**: I think TUI is more intuition.
 - **Multi-Registry Management**: Easily switch between different registries for each supported software.
 - **Secure Token Storage**: Securely manage and store access tokens for private registries.
 - **Centralized Configuration**: Simplify and centralize the configuration of all supported package managers and registries.
