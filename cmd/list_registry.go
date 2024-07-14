@@ -42,5 +42,5 @@ func (m listRegistryModel) View() string {
 }
 
 func init() {
-	RegisterCommand("listRegistry", listRegistryModel{})
+	RegisterCommand("listRegistry", "List Registry by App Name", listRegistryModel{})
 }

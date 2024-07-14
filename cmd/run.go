@@ -10,11 +10,13 @@ import (
 type mainMenuModel struct {
 	cursor  int
 	choices []string
+	names   []string
 }
 
 func newMainMenuModel() mainMenuModel {
 	return mainMenuModel{
-		choices: ListCommands(),
+		choices: ListCommandDescriptions(),
+		names:   ListCommandNames(),
 	}
 }
 
@@ -37,7 +39,7 @@ func (m mainMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.cursor++
 			}
 		case "enter", " ":
-			cmd, initCmd := GetCommand(m.choices[m.cursor])
+			cmd, initCmd := GetCommand(m.names[m.cursor])
 			if cmd != nil {
 				return cmd, initCmd
 			}
@@ -60,7 +62,7 @@ func (m mainMenuModel) View() string {
 }
 
 func Run() {
-	RegisterCommand("mainMenu", newMainMenuModel())
+	RegisterCommand("mainMenu", "Main Menu", newMainMenuModel())
 
 	p := tea.NewProgram(newMainMenuModel())
 	if _, err := p.Run(); err != nil {

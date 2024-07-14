@@ -8,24 +8,47 @@ type Command interface {
 	View() string
 }
 
-var commandRegistry = make(map[string]Command)
+type CommandInfo struct {
+	Name        string
+	Description string
+	Command     Command
+}
 
-func RegisterCommand(name string, cmd Command) {
-	commandRegistry[name] = cmd
+var commandRegistry = make(map[string]CommandInfo)
+var mainMenuName = "mainMenu"
+
+func RegisterCommand(name, description string, cmd Command) {
+	commandRegistry[name] = CommandInfo{
+		Name:        name,
+		Description: description,
+		Command:     cmd,
+	}
 }
 
 func GetCommand(name string) (tea.Model, tea.Cmd) {
-	cmd, exists := commandRegistry[name]
+	info, exists := commandRegistry[name]
 	if !exists {
 		return nil, nil
 	}
-	return cmd, cmd.Init()
+	return info.Command, info.Command.Init()
 }
 
-func ListCommands() []string {
-	commands := make([]string, 0, len(commandRegistry))
-	for name := range commandRegistry {
-		commands = append(commands, name)
+func ListCommandDescriptions() []string {
+	descriptions := make([]string, 0, len(commandRegistry))
+	for _, info := range commandRegistry {
+		if info.Name != mainMenuName {
+			descriptions = append(descriptions, info.Description)
+		}
 	}
-	return commands
+	return descriptions
+}
+
+func ListCommandNames() []string {
+	names := make([]string, 0, len(commandRegistry))
+	for name := range commandRegistry {
+		if name != mainMenuName {
+			names = append(names, name)
+		}
+	}
+	return names
 }

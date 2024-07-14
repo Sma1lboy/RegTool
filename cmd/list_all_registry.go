@@ -31,5 +31,5 @@ func (m listAllRegistryModel) View() string {
 }
 
 func init() {
-	RegisterCommand("listAllRegistry", listAllRegistryModel{})
+	RegisterCommand("listAllRegistry", "List All Registry", listAllRegistryModel{})
 }

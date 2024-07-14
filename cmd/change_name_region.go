@@ -31,5 +31,5 @@ func (m changeNameRegionModel) View() string {
 }
 
 func init() {
-	RegisterCommand("changeNameRegion", changeNameRegionModel{})
+	RegisterCommand("changeNameRegion", "Change Name to Region", changeNameRegionModel{})
 }

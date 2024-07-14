@@ -31,5 +31,5 @@ func (m changeAllModel) View() string {
 }
 
 func init() {
-	RegisterCommand("changeAll", changeAllModel{})
+	RegisterCommand("changeAll", "Change All to Region", changeAllModel{})
 }
