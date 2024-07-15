@@ -2,9 +2,9 @@ package source
 
 import "registryhub/source/structs"
 
-// RegistryManager is an interface for managing registries.
+// AppManager is an interface for managing registries.
 // This interface defines methods to get the current registry URL and set the registry URL based on a specified region and sources.
-type RegistryManager interface {
+type AppManager interface {
 
 	// GetCurrRegistry retrieves the current registry URL.
 	// Returns:
@@ -21,4 +21,7 @@ type RegistryManager interface {
 	// - string: A message indicating the result of the operation.
 	// - error: An error if there is an issue setting the registry URL.
 	SetRegistry(region structs.Region, sources *structs.RegistrySources) (string, error)
+
+	//check is this App exists
+	IsExists() bool
 }
