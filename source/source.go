@@ -2,6 +2,7 @@ package source
 
 import (
 	"encoding/json"
+	"fmt"
 	"os/exec"
 	"registryhub/common/alias"
 	"registryhub/console"
@@ -121,10 +122,10 @@ func ChangeAllRegistry(region string) bool {
 	return true
 }
 
-var registryManagers = map[string]RegistryManager{}
+var registryManagers = map[string]AppManager{}
 
 // RegisterManager registers a manager for the given names
-func RegisterManager(names []string, manager RegistryManager) {
+func RegisterManager(names []string, manager AppManager) {
 	for _, name := range names {
 		registryManagers[name] = manager
 	}
@@ -154,4 +155,18 @@ func UpdateRegistry(region string, app string) error {
 		}
 	}
 	return nil
+}
+
+// Get All Registered
+func GetAllRegisteredApp() map[string]AppManager {
+
+	res := make(map[string]AppManager)
+	for appName, manager := range registryManagers {
+		if !manager.IsExists() {
+			continue
+		}
+		res[appName] = manager
+		fmt.Println(appName, " exist in local")
+	}
+	return res
 }
