@@ -5,7 +5,38 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/fatih/color"
+	"github.com/charmbracelet/lipgloss"
+)
+
+var (
+	primaryColor   = lipgloss.Color("#4A90E2")
+	secondaryColor = lipgloss.Color("#6FCF97")
+	bgColor        = lipgloss.Color("#F0F4F8")
+	textColor      = lipgloss.Color("#333333")
+
+	titleStyle = lipgloss.NewStyle().
+			Foreground(primaryColor).
+			Background(bgColor).
+			Bold(true).
+			Padding(0, 1).
+			MarginBottom(1).
+			BorderStyle(lipgloss.NormalBorder()).
+			BorderBottom(true).
+			BorderForeground(primaryColor)
+	optionStyle = lipgloss.NewStyle().
+			Padding(0, 1)
+	selectedOptionStyle = optionStyle.Copy().
+				Foreground(primaryColor).
+				Background(lipgloss.Color("#E6F0FF")).
+				Bold(true)
+	quitTextStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#888888")).
+			Italic(true)
+	frameStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(primaryColor).
+			Padding(1).
+			Background(bgColor)
 )
 
 type mainMenuModel struct {
@@ -50,20 +81,18 @@ func (m mainMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m mainMenuModel) View() string {
-	s := "RegistryHub\n\n"
+	s := titleStyle.Render("RegistryHub") + "\n"
+
 	for i, choice := range m.choices {
-		cursor := " " // no cursor
-		line := choice
 		if m.cursor == i {
-			cursor = ">" // cursor!
-			// Use color package to bold and color the selected line
-			bold := color.New(color.FgBlue).Add(color.Bold)
-			line = bold.Sprintf(choice)
+			s += selectedOptionStyle.Render(fmt.Sprintf(" • %s", choice)) + "\n"
+		} else {
+			s += optionStyle.Render(fmt.Sprintf("   %s", choice)) + "\n"
 		}
-		s += fmt.Sprintf("%s %s\n", cursor, line)
 	}
-	s += "\nPress 'q' to quit.\n"
-	return s
+
+	s += "\n" + quitTextStyle.Render("Press 'q' to quit.")
+	return frameStyle.Render(s)
 }
 
 func Run() {
