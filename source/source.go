@@ -7,7 +7,6 @@ import (
 	"registryhub/common/alias"
 	"registryhub/console"
 	"registryhub/source/structs"
-	"strings"
 )
 
 // GetRemoteRegistrySources fetches the remote sources and returns them
@@ -55,56 +54,7 @@ type Source struct {
 	Name   string
 }
 
-// PrintSources prints all registered sources
-func PrintSources(m map[string]Source) {
-	printSourceTitle("====================Current Sources=====================")
-	for _, v := range m {
-		printSource(v.Name, v.Url, v.Region)
-	}
-}
-
-func printRegionSources(sources structs.RegistryRegionSources, region string) {
-	for k, v := range sources {
-		// TODO: only concern first url for now
-		printSource(k, v[0], region)
-	}
-}
-
-func printSourceTitle(title string) {
-	console.Println(console.Color.Purple, title)
-}
-
-func printSource(source string, url string, region string) {
-	console.Print(source)
-	console.Print(" ")
-	console.Print(console.Color.Cyan, url)
-	console.Print(" ")
-	console.Print(console.Color.Purple, region)
-	console.Println("")
-}
-
-func printSuccessMessage(app string, registry string, region string) {
-	console.Printf(console.Color.Reset, "Setting ")
-	console.Printf(console.Color.Red, "%s", app)
-	console.Print(console.Color.Reset, " to")
-	console.Printf(console.Color.Green, " %s ", strings.ToUpper(region))
-	console.Print(console.Color.Reset, "registry")
-	console.Printf(console.Color.Green, " %s", registry)
-	console.Print(console.Color.Reset, " ✅\n")
-}
-
-func printChangeRegistryHeader(region string) {
-	console.Println(console.Color.Purple, "=========Changing all sources to the", strings.ToUpper(region), "registry=========")
-	console.Println("", "")
-}
-
-func printChangeRegistryFooter() {
-	console.Println("", "")
-	console.Println(console.Color.Purple, "=================================================================")
-}
-
 func ChangeAllRegistry(region string) bool {
-	printChangeRegistryHeader(region)
 	rs, err := GetRemoteRegistrySources()
 	if err != nil {
 		console.Error("Failed to fetch remote sources:", err.Error())
@@ -113,12 +63,10 @@ func ChangeAllRegistry(region string) bool {
 
 	// Init source manager
 
-	for app, manager := range registryManagers {
-		registry, _ := manager.SetRegistry(structs.StringToRegion(region), rs)
-		printSuccessMessage(app, registry, region)
+	for _, manager := range registryManagers {
+		_, _ = manager.SetRegistry(structs.StringToRegion(region), rs)
 	}
 
-	printChangeRegistryFooter()
 	return true
 }
 
@@ -132,7 +80,9 @@ func RegisterManager(names []string, manager AppManager) {
 }
 
 func UpdateRegistry(region string, app string) error {
+
 	rs, err := GetRemoteRegistrySources()
+
 	if err != nil {
 		console.Error("Failed to fetch remote sources:", err.Error())
 		return &exec.Error{Name: "Failed to fetch remote sources", Err: err}
