@@ -48,6 +48,12 @@ func (n NpmRegistryManager) SetRegistry(region structs.Region, sources *structs.
 	}
 	return res, nil
 }
+func (n NpmRegistryManager) IsExists() bool {
+
+	_, err := exec.Command("npm", "config", "get", "registry").Output()
+
+	return err == nil
+}
 
 func init() {
 	alias.RegisterAlias("npm", []string{})

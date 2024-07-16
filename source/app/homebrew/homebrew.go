@@ -70,6 +70,12 @@ func (h HomebrewRegistryManager) SetRegistry(region structs.Region, sources *str
 
 	return "Homebrew registry set successfully", nil
 }
+
+// TODO: later
+func (h HomebrewRegistryManager) IsExists() bool {
+	return true
+}
+
 func init() {
 	alias.RegisterAlias("homebrew", []string{"brew"})
 
