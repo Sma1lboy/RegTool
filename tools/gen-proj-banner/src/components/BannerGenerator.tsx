@@ -8,6 +8,7 @@ const iconStyle = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  margin: "10px",
 };
 
 const iconList = [
@@ -35,9 +36,14 @@ const BannerGenerator = ({
 }) => {
   const getRandomIcon = () =>
     iconList[Math.floor(Math.random() * iconList.length)];
-  const getRandomColor = () => {
+
+  const hexOpacity = ["33", "66", "99"];
+
+  const getRandomColorWithOpacity = () => {
     const colors = ["#ffffff", "#61dafb"];
-    return colors[Math.floor(Math.random() * colors.length)];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const opacity = hexOpacity[Math.floor(Math.random() * hexOpacity.length)];
+    return `${color}${opacity}`;
   };
 
   const midRowIndex = Math.floor(rows / 2);
@@ -45,15 +51,15 @@ const BannerGenerator = ({
   const renderIcon = () => {
     const icon = getRandomIcon();
     return (
-      <div style={{ ...iconStyle }}>
+      <div style={iconStyle}>
         <svg
           role="img"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           style={{
-            width: "80%",
-            height: "80%",
-            fill: getRandomColor(),
+            width: "100%",
+            height: "100%",
+            fill: getRandomColorWithOpacity(),
           }}
         >
           <path d={icon.path} />
@@ -65,12 +71,11 @@ const BannerGenerator = ({
   const sideIconsCount = Math.floor((cols - textWidth) / 2);
 
   return (
-    <div style={{ width: "100%", backgroundColor: "#0e2a47", padding: "20px" }}>
+    <div style={{ width: "100%", backgroundColor: "#008b8b", padding: "20px" }}>
       <div
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gridTemplateRows: `repeat(${rows}, auto)`,
           gap: "10px",
           justifyItems: "center",
           alignItems: "center",
@@ -88,8 +93,8 @@ const BannerGenerator = ({
                 <div
                   style={{
                     gridColumn: `span ${textWidth}`,
-                    color: "white",
-                    fontSize: "48px",
+                    color: "#e0ffff",
+                    fontSize: "36px",
                     fontWeight: "bold",
                     textAlign: "center",
                     padding: "20px 0",

@@ -1,5 +1,5 @@
 import BannerGenerator from "./components/BannerGenerator";
 export const App = () => {
-  return <BannerGenerator rows={7} cols={9} textWidth={1} />;
+  return <BannerGenerator rows={5} cols={11} textWidth={3} />;
 };
 export default App;
