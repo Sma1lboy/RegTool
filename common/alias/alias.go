@@ -41,3 +41,10 @@ func GetAllAliases(primary string) []string {
 	}
 	return []string{}
 }
+func GetAllPrimary() []string {
+	res := make([]string, 0)
+	for k := range manager.primaryToAliases {
+		res = append(res, k)
+	}
+	return res
+}
