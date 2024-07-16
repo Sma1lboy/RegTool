@@ -1,3 +1,5 @@
+![banner](./assets/banner.jpg)
+
 ### Supported Software
 
 **RegTool** supports a wide range of software registries and package managers to enhance your development workflow. Below is a comprehensive list of the software currently supported:
