@@ -61,6 +61,43 @@ The process described here has several goals:
 - Be sure all tests pass.
 - When you make very small changes to documentation, it may help to add `[ci skip]` to your commit message to skip running tests for that commit.
 
+## How to Clone, Build, and Run the Project
+
+### Prerequisites
+
+Make sure you have the following tools installed:
+
+- [Go](https://golang.org/doc/install) (1.16 or higher)
+- [Git](https://git-scm.com/)
+
+### Clone the Repository
+
+1. Fork the repository on GitHub.
+2. Clone your fork to your local machine:
+
+   ```sh
+   git clone https://github.com/your-username/regtool.git
+   cd regtool
+   ```
+
+### Build the Project
+
+1. Run the following command to generate the `initall.go` file and build the project:
+
+   ```sh
+   make
+   ```
+
+### Run the Project
+
+1. After building the project, you can run the executable:
+
+   ```sh
+   ./regtool
+   ```
+
+This will start RegTool with the default settings.
+
 ## Style Guides
 
 ### Git Commit Messages
