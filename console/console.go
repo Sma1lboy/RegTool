@@ -2,6 +2,8 @@ package console
 
 import (
 	"fmt"
+	"os"
+	"regtool/env"
 	"strings"
 )
 
@@ -52,4 +54,11 @@ func Warning(messages ...string) {
 
 func Info(messages ...string) {
 	Println(Color.Blue, messages...)
+}
+
+func Debug(messages ...string) {
+	if os.Getenv(env.GO_MODE) != env.DEBUG {
+		return
+	}
+	Println(Color.Purple, messages...)
 }
