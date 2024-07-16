@@ -76,7 +76,7 @@ Make sure you have the following tools installed:
 2. Clone your fork to your local machine:
 
    ```sh
-   git clone https://github.com/your-username/regtool.git
+   git clone https://github.com/Sma1lboy/regtool.git
    cd regtool
    ```
 
