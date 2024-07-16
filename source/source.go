@@ -108,7 +108,7 @@ func UpdateRegistry(region string, app string) error {
 }
 
 // Get All Registered
-func GetAllRegisteredApp() map[string]AppManager {
+func GetAllExistLocalApp() map[string]AppManager {
 
 	res := make(map[string]AppManager)
 	for appName, manager := range registryManagers {
