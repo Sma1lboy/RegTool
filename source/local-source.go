@@ -1,47 +1,9 @@
 package source
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
-	"os"
+	"registryhub/source/localdata"
 )
-
-func readBackupFile() (map[string]string, error) {
-	var data map[string]string
-
-	// Check if the backup file exists
-	if _, err := os.Stat(SOURCE_BACKUP_FILE); err == nil {
-		// File exists, read the existing data
-		file, err := os.Open(SOURCE_BACKUP_FILE)
-		if err != nil {
-			return nil, fmt.Errorf("failed to open backup file: %v", err)
-		}
-		defer file.Close()
-
-		decoder := json.NewDecoder(file)
-		err = decoder.Decode(&data)
-		if err != nil {
-			return nil, fmt.Errorf("failed to decode backup file: %v", err)
-		}
-		return data, nil
-	} else if errors.Is(err, os.ErrNotExist) {
-		// File does not exist, return empty map
-		return make(map[string]string), nil
-	} else {
-		return nil, fmt.Errorf("failed to check backup file: %v", err)
-	}
-}
-
-func ReadBackup() map[string]string {
-	m, err := readBackupFile()
-
-	if err != nil {
-		fmt.Println("Error reading backup file:", err)
-		return nil
-	}
-	return m
-}
 
 // Convert map[Name]Source
 func convertLocalSources(sources map[string]string) map[string]Source {
@@ -70,9 +32,9 @@ func convertLocalSources(sources map[string]string) map[string]Source {
 }
 
 func GetLocalSourcesMap() (map[string]Source, error) {
-	sources := ReadBackup()
-	if sources == nil {
-		return nil, fmt.Errorf("failed to read backup file")
+	sources, err := localdata.ReadBackupFile()
+	if err != nil {
+		return nil, fmt.Errorf("failed to read backup file: %v", err)
 	}
 	return convertLocalSources(sources), nil
 }
