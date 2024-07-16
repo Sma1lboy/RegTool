@@ -41,3 +41,31 @@ By supporting a wide range of software and registries, RegTool aims to streamlin
 | Pub        | Handle Dart packages and configure Pub repositories.                                     | ![red](https://img.shields.io/badge/status-unavailable-red)         |
 
 RegTool aims to streamline your development process and provide a seamless experience across different ecosystems.
+
+### Build Instructions
+
+To build RegTool from source, follow these steps:
+
+1. **Clone the repository:**
+
+   ```sh
+   git clone https://github.com/yourusername/regtool.git
+   cd regtool
+   ```
+
+2. **Build the project:**
+
+   ```sh
+   make build
+   ```
+
+3. **Run RegTool:**
+   ```sh
+   ./regtool
+   ```
+
+### Contribution
+
+We welcome contributions! If you would like to contribute to this project, please follow the guidelines in our [CONTRIBUTION.md](./CONTRIBUTION.md).
+
+Thank you for your interest in contributing to RegTool. Your contributions are greatly appreciated.
