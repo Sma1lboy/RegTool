@@ -62,12 +62,14 @@ func (m mainMenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "up", "k":
-			if m.cursor > 0 {
-				m.cursor--
+			m.cursor--
+			if m.cursor < 0 {
+				m.cursor = len(m.choices) - 1
 			}
 		case "down", "j":
-			if m.cursor < len(m.choices)-1 {
-				m.cursor++
+			m.cursor++
+			if m.cursor >= len(m.choices) {
+				m.cursor = 0
 			}
 		case "enter", " ":
 			cmd, initCmd := GetCommand(m.names[m.cursor])
