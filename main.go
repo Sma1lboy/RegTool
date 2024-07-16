@@ -1,9 +1,9 @@
 package main
 
 import (
-	"registryhub/cmd"
-	"registryhub/env"
-	_ "registryhub/source/initall"
+	"regtool/cmd"
+	"regtool/env"
+	_ "regtool/source/initall"
 )
 
 func main() {

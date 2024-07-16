@@ -45,7 +45,7 @@ func main() {
 			for _, fileInfo := range files {
 				if strings.HasSuffix(fileInfo.Name(), ".go") {
 					relativePath := strings.TrimPrefix(path, sourceDir+"/")
-					importPath := fmt.Sprintf("_ \"registryhub/%s\"\n", relativePath)
+					importPath := fmt.Sprintf("_ \"regtool/%s\"\n", relativePath)
 					if _, err := file.WriteString(importPath); err != nil {
 						log.Fatalf("Failed to write to file: %v", err)
 					}

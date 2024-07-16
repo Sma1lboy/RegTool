@@ -4,9 +4,9 @@ package npm
 import (
 	"fmt"
 	"os/exec"
-	"registryhub/common/alias"
-	"registryhub/source"
-	"registryhub/source/structs"
+	"regtool/common/alias"
+	"regtool/source"
+	"regtool/source/structs"
 	"strings"
 )
 

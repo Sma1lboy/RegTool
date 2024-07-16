@@ -1,6 +1,6 @@
 package bash
 
-import "registryhub/shell"
+import "regtool/shell"
 
 type Bash struct{}
 

@@ -1,4 +1,4 @@
-module registryhub
+module regtool 
 
 go 1.19
 

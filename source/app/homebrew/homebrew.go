@@ -3,10 +3,10 @@ package source
 import (
 	"fmt"
 	"os/exec"
-	"registryhub/common/alias"
-	"registryhub/shell"
-	"registryhub/source"
-	"registryhub/source/structs"
+	"regtool/common/alias"
+	"regtool/shell"
+	"regtool/source"
+	"regtool/source/structs"
 	"strings"
 )
 

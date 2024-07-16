@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
-	"registryhub/common/alias"
-	"registryhub/console"
-	"registryhub/source/structs"
+	"regtool/common/alias"
+	"regtool/console"
+	"regtool/source/structs"
 )
 
 // GetRemoteRegistrySources fetches the remote sources and returns them

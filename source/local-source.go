@@ -2,7 +2,7 @@ package source
 
 import (
 	"fmt"
-	"registryhub/source/localdata"
+	"regtool/source/localdata"
 )
 
 // Convert map[Name]Source

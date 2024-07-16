@@ -1,6 +1,6 @@
 package zsh
 
-import "registryhub/shell"
+import "regtool/shell"
 
 // Zsh represents the zsh shell.
 type Zsh struct{}

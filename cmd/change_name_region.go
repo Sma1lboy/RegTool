@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"registryhub/source"
+	"regtool/source"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
