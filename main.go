@@ -3,7 +3,7 @@ package main
 import (
 	"registryhub/cmd"
 	"registryhub/env"
-	_ "registryhub/source"
+	_ "registryhub/source/initall"
 )
 
 func main() {
