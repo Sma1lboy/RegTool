@@ -60,7 +60,7 @@ func (m changeNameRegionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				err2 := source.UpdateRegistry(m.region, m.appName)
 				if err2 != nil {
 					log.Printf("Update failed: %v", err2)
-					m.successMsg = fmt.Sprintf("Error: invalid app name to update %s to the %s registry", m.appName, m.region)
+					m.successMsg = fmt.Sprintf("Error: invalid app name to update %s to the %s registry\n %s", m.appName, m.region, err2)
 				} else {
 					log.Println("Update succeeded")
 					m.successMsg = fmt.Sprintf("Changed %s to region %s successfully", m.appName, m.region)
