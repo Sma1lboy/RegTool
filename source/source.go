@@ -2,7 +2,6 @@ package source
 
 import (
 	"encoding/json"
-	"fmt"
 	"os/exec"
 	"regtool/common/alias"
 	"regtool/console"
@@ -111,12 +110,13 @@ func UpdateRegistry(region string, app string) error {
 func GetAllExistLocalApp() map[string]AppManager {
 
 	res := make(map[string]AppManager)
-	for appName, manager := range registryManagers {
-		if !manager.IsExists() {
-			continue
+	for _, appName := range alias.GetAllPrimary() {
+		if manager, ok := registryManagers[appName]; ok {
+			if !manager.IsExists() {
+				continue
+			}
+			res[appName] = manager
 		}
-		res[appName] = manager
-		fmt.Println(appName, " exist in local")
 	}
 	return res
 }

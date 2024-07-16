@@ -11,7 +11,7 @@ import (
 // Constants for directory and file paths
 const (
 	DOT_CONFIG_NAME          = ".config"
-	REGISTRY_HUB_FOLDER_NAME = "registry-hub"
+	REGISTRY_HUB_FOLDER_NAME = "regtool"
 	SOURCE_BACKUP_FILE_NAME  = "backup.json"
 	READ_PERMISSION          = 0755
 )
