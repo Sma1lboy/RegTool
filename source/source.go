@@ -53,22 +53,6 @@ type Source struct {
 	Name   string
 }
 
-func ChangeAllRegistry(region string) bool {
-	rs, err := GetRemoteRegistrySources()
-	if err != nil {
-		console.Error("Failed to fetch remote sources:", err.Error())
-		return false
-	}
-
-	// Init source manager
-
-	for _, manager := range registryManagers {
-		_, _ = manager.SetRegistry(structs.StringToRegion(region), rs)
-	}
-
-	return true
-}
-
 var registryManagers = map[string]AppManager{}
 
 // RegisterManager registers a manager for the given names
@@ -107,7 +91,7 @@ func UpdateRegistry(region string, app string) error {
 }
 
 // Get All Registered
-func GetAllExistLocalApp() map[string]AppManager {
+func GetAllRegisteredApp() map[string]AppManager {
 
 	res := make(map[string]AppManager)
 	for _, appName := range alias.GetAllPrimary() {
