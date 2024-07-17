@@ -6,32 +6,10 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
 var (
-	primaryColor    = lipgloss.Color("#61AFEF")
-	bgColor         = lipgloss.Color("#282C34")
-	textColor       = lipgloss.Color("#ABB2BF")
-	selectedColor   = lipgloss.Color("#98C379")
-	unselectedColor = lipgloss.Color("#3E4451")
-	accentColor     = lipgloss.Color("#C678DD")
-
-	titleStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#E5C07B")).
-			Bold(true).
-			MarginBottom(1)
-
-	optionStyle = lipgloss.NewStyle().
-			Foreground(textColor)
-
-	selectedOptionStyle = lipgloss.NewStyle().
-				Foreground(selectedColor).
-				Bold(true)
-
-	quitTextStyle = lipgloss.NewStyle().
-			Foreground(accentColor).
-			Italic(true)
+	regions = []string{"us", "cn", "eu", "jp"}
 )
 
 type mainMenuModel struct {
@@ -45,7 +23,7 @@ func newMainMenuModel() mainMenuModel {
 	return mainMenuModel{
 		choices: ListCommandDescriptions(),
 		names:   ListCommandNames(),
-		width:   80, // Default width
+		width:   80,
 	}
 }
 
@@ -85,30 +63,23 @@ func (m mainMenuModel) View() string {
 	doc := strings.Builder{}
 
 	// Title
-	doc.WriteString(titleStyle.Render("🔧 RegistryHub") + "\n")
+	doc.WriteString(GetStyledTitle("RegistryHub") + "\n")
 
 	// Menu options
 	for i, choice := range m.choices {
-		cursor := "  "
-		style := optionStyle
-		if m.cursor == i {
-			cursor = "▶ "
-			style = selectedOptionStyle
-		}
-		doc.WriteString(style.Render(cursor+choice) + "\n")
+		doc.WriteString(GetStyledOption(choice, m.cursor == i) + "\n")
 	}
 
 	// Quit instruction
-	doc.WriteString("\n" + quitTextStyle.Render("Press 'q' to quit"))
+	doc.WriteString("\n" + GetStyledQuitText())
 
-	return doc.String()
+	return borderedBox(doc.String())
 }
-
 func Run() {
 	RegisterCommand(mainMenuName, "Main Menu", newMainMenuModel())
 	p := tea.NewProgram(newMainMenuModel())
 	if _, err := p.Run(); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		fmt.Fprintf(os.Stderr, errorStyle.Render(fmt.Sprintf("Error: %v\n", err)))
 		os.Exit(1)
 	}
 }

@@ -10,8 +10,6 @@ import (
 	"github.com/fatih/color"
 )
 
-var regions = []string{"us", "cn", "eu", "jp"}
-
 type changeNameRegionModel struct {
 	input      textinput.Model
 	stage      int
@@ -40,7 +38,7 @@ func (m changeNameRegionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "q", "esc", "ctrl+c":
-			return GetCommand(mainMenuName)
+			return m, tea.Quit
 		case "enter":
 			if m.stage == 0 {
 				if m.input.Value() == "" {
