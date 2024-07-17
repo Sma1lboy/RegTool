@@ -14,13 +14,14 @@ import (
 
 // updateModel defines the structure for the update model
 type updateModel struct {
-	confirming    bool
-	completed     bool
-	progress      progress.Model
-	progressVal   float64
-	spinner       spinner.Model
-	msg           string
-	updateMessage string // TODO for callback func
+	confirming     bool
+	completed      bool
+	progress       progress.Model
+	progressVal    float64
+	spinner        spinner.Model
+	msg            string
+	updateMessages []string    // Slice to store all update messages
+	updateChan     chan string // Channel to receive update messages
 }
 
 // Init initializes the update model
@@ -39,12 +40,14 @@ func (m updateModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.progressVal = 0
 
 				updateResult := make(chan error)
+				m.updateChan = make(chan string)
 				go func() {
-					err := source.Update()
+					err := source.Update(m.updateChan)
 					updateResult <- err
+					close(m.updateChan)
 				}()
 
-				return m, tea.Batch(animateProgress(), waitForUpdate(updateResult))
+				return m, tea.Batch(animateProgress(), waitForUpdate(updateResult), waitForUpdateMessages(m.updateChan))
 			}
 		case "q", "esc":
 			return GetCommand(mainMenuName)
@@ -76,6 +79,10 @@ func (m updateModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.msg = "Update completed successfully!"
 		}
 		return m, nil
+
+	case updateMessageMsg:
+		m.updateMessages = append(m.updateMessages, msg.message) // Store the message
+		return m, tea.Batch(waitForUpdateMessages(m.updateChan)) // Continue listening for more messages
 	}
 
 	var cmd tea.Cmd
@@ -100,7 +107,11 @@ func (m updateModel) View() string {
 
 	doc.WriteString(m.spinner.View() + "Updating... Press 'q' or 'esc' to cancel.\n\n")
 	doc.WriteString(fmt.Sprintf("%s\n\n", m.progress.View()))
-	doc.WriteString(m.msg)
+	doc.WriteString("Update Messages:\n")
+	for _, msg := range m.updateMessages {
+		doc.WriteString(fmt.Sprintf(" - %s\n", msg))
+	}
+	doc.WriteString("\n" + m.msg)
 	return doc.String()
 }
 
@@ -127,6 +138,11 @@ type updateResultMsg struct {
 	err error
 }
 
+// updateMessageMsg is used to send update messages
+type updateMessageMsg struct {
+	message string
+}
+
 // animateProgress sends a tick message at a fixed interval
 func animateProgress() tea.Cmd {
 	return tea.Tick(time.Millisecond*50, func(t time.Time) tea.Msg {
@@ -139,5 +155,15 @@ func waitForUpdate(updateResult chan error) tea.Cmd {
 	return func() tea.Msg {
 		err := <-updateResult
 		return updateResultMsg{err}
+	}
+}
+
+// waitForUpdateMessages waits for update messages and sends them as tea messages
+func waitForUpdateMessages(updateChan chan string) tea.Cmd {
+	return func() tea.Msg {
+		for msg := range updateChan {
+			return updateMessageMsg{message: msg}
+		}
+		return nil
 	}
 }
