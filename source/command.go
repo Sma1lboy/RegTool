@@ -1,6 +1,7 @@
 package source
 
 import (
+	"fmt"
 	"regtool/console"
 	"regtool/source/localdata"
 	"regtool/source/structs"
@@ -47,4 +48,33 @@ func ChangeAllRegistry(region string, updateChan chan string) error {
 
 	}
 	return nil
+}
+
+func ListAllRegistry(ch chan<- string) {
+	rs, err := GetRemoteRegistrySources()
+	if err != nil {
+		ch <- fmt.Sprintf("ERROR: Failed to get remote registry sources: %s", err.Error())
+		return
+	}
+
+	res := make(map[string][]Source)
+	for region, regionSources := range *rs {
+		for appName, urls := range regionSources {
+			for _, url := range urls {
+				res[appName] = append(res[appName], Source{
+					Region: string(region),
+					Url:    url,
+					Name:   appName,
+				})
+			}
+		}
+	}
+
+	for appName, sources := range res {
+		ch <- fmt.Sprintf("APP: %s", appName)
+		for _, source := range sources {
+			ch <- fmt.Sprintf("  REGION: %s, URL: %s", source.Region, source.Url)
+		}
+		ch <- "\n"
+	}
 }
