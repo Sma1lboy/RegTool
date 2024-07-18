@@ -78,3 +78,35 @@ func ListAllRegistry(ch chan<- string) {
 		ch <- "\n"
 	}
 }
+func ListRegistryByAppName(appName string, ch chan<- string) {
+	rs, err := GetRemoteRegistrySources()
+	if err != nil {
+		ch <- fmt.Sprintf("ERROR: Failed to get remote registry sources: %s", err.Error())
+		close(ch)
+		return
+	}
+
+	res := make(map[string][]Source)
+	for region, regionSources := range *rs {
+		for name, urls := range regionSources {
+			for _, url := range urls {
+				res[name] = append(res[name], Source{
+					Region: string(region),
+					Url:    url,
+					Name:   name,
+				})
+			}
+		}
+	}
+
+	if sources, found := res[appName]; found {
+		ch <- fmt.Sprintf("APP: %s", appName)
+		for _, source := range sources {
+			ch <- fmt.Sprintf("REGION: %s, URL: %s", source.Region, source.Url)
+		}
+	} else {
+		ch <- fmt.Sprintf("ERROR: No sources found for app: %s", appName)
+	}
+
+	close(ch)
+}
