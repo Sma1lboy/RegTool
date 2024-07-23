@@ -25,7 +25,7 @@ By supporting a wide range of software and registries, RegTool aims to streamlin
 | Name       | Description                                                                              | Availability                                                        |
 | ---------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | npm        | Manage Node.js packages and switch between public and private npm registries seamlessly. | ![green](https://img.shields.io/badge/status-available-brightgreen) |
-| Yarn       | Configure Yarn package manager registries, supporting both public and private packages.  | ![red](https://img.shields.io/badge/status-unavailable-red)         |
+| Yarn       | Configure Yarn package manager registries, supporting both public and private packages.  | ![green](https://img.shields.io/badge/status-available-brightgreen) |
 | Docker     | Handle Docker image registries, including Docker Hub and private Docker registries.      | ![red](https://img.shields.io/badge/status-unavailable-red)         |
 | Homebrew   | Manage Homebrew taps and repositories for macOS and Linux package installations.         | ![red](https://img.shields.io/badge/status-unavailable-red)         |
 | pip        | Configure and manage Python package indexes, including PyPI and private repositories.    | ![red](https://img.shields.io/badge/status-unavailable-red)         |

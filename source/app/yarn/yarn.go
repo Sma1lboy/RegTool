@@ -1,5 +1,4 @@
-// source/npm.go
-package npm
+package yarn
 
 import (
 	"fmt"
@@ -10,10 +9,10 @@ import (
 	"strings"
 )
 
-type NpmRegistryManager struct{}
+type YarnRegistryManager struct{}
 
-func (n NpmRegistryManager) GetCurrRegistry() (string, error) {
-	cmd := exec.Command("npm", "config", "get", "registry")
+func (n YarnRegistryManager) GetCurrRegistry() (string, error) {
+	cmd := exec.Command("yarn", "config", "get", "registry")
 	output, err := cmd.Output()
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -22,7 +21,7 @@ func (n NpmRegistryManager) GetCurrRegistry() (string, error) {
 	return strings.TrimSpace(string(output)), nil
 }
 
-func (n NpmRegistryManager) SetRegistry(region structs.Region, sources *structs.RegistrySources) (string, error) {
+func (n YarnRegistryManager) SetRegistry(region structs.Region, sources *structs.RegistrySources) (string, error) {
 	if sources == nil {
 		return "", fmt.Errorf("sources is nil")
 	}
@@ -39,7 +38,7 @@ func (n NpmRegistryManager) SetRegistry(region structs.Region, sources *structs.
 	res := npmSources[0]
 
 	fmt.Println(res)
-	c := exec.Command("npm", "config", "set", "registry", res)
+	c := exec.Command("yarn", "config", "set", "registry", res)
 	_, err := c.Output()
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -47,14 +46,14 @@ func (n NpmRegistryManager) SetRegistry(region structs.Region, sources *structs.
 	}
 	return res, nil
 }
-func (n NpmRegistryManager) IsExists() bool {
+func (n YarnRegistryManager) IsExists() bool {
 
-	_, err := exec.Command("npm", "config", "get", "registry").Output()
+	_, err := exec.Command("yarn", "config", "get", "registry").Output()
 
 	return err == nil
 }
 
 func init() {
-	alias.RegisterAlias("npm", []string{})
-	source.RegisterManager([]string{"npm"}, NpmRegistryManager{})
+	alias.RegisterAlias("yarn", []string{})
+	source.RegisterManager([]string{"yarn"}, YarnRegistryManager{})
 }
