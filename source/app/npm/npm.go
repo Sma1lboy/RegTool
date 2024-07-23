@@ -38,7 +38,6 @@ func (n NpmRegistryManager) SetRegistry(region structs.Region, sources *structs.
 
 	res := npmSources[0]
 
-	fmt.Println(res)
 	c := exec.Command("npm", "config", "set", "registry", res)
 	_, err := c.Output()
 	if err != nil {
